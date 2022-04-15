@@ -2,8 +2,8 @@ let canvas = document.getElementById("myCanvas");
 let ctx = canvas.getContext("2d");
 
 // ball properties
-let x = canvas.width/2;
-let y = canvas.height-30;
+let x = canvas.width / 2;
+let y = canvas.height - 30;
 let ballRadius = 10
 let dx = 2;
 let dy = -2;
@@ -12,38 +12,74 @@ let dy = -2;
 // paddle properties
 let paddleHeight = 10;
 let paddleWidth = 75;
-let paddleX = (canvas.width-paddleWidth) / 2;
+let paddleX = (canvas.width - paddleWidth) / 2;
 
 // paddle controls
-var rightPressed = false;
-var leftPressed = false;
+let rightPressed = false;
+let leftPressed = false;
+
+//  bricks properties
+let brickRowCount = 3;
+let brickColumnCount = 5;
+let brickWidth = 140;
+let brickHeight = 35;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft = 30;
+
+let bricks = [];
+for (let i = 0; i < brickColumnCount; i++) {
+    bricks[i] = [];
+    for (let r = 0; r < brickRowCount; r++) {
+        bricks[i][r] = { x: 0, y: 0 };
+    }
+}
 
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 function keyDownHandler(e) {
-    if(e.key == "Right" || e.key == "ArrowRight") {
+    if (e.key == "Right" || e.key == "ArrowRight") {
         rightPressed = true;
     }
-    else if(e.key == "Left" || e.key == "ArrowLeft") {
+    else if (e.key == "Left" || e.key == "ArrowLeft") {
         leftPressed = true;
     }
 }
 
 function keyUpHandler(e) {
-    if(e.key == "Right" || e.key == "ArrowRight") {
+    if (e.key == "Right" || e.key == "ArrowRight") {
         rightPressed = false;
     }
-    else if(e.key == "Left" || e.key == "ArrowLeft") {
+    else if (e.key == "Left" || e.key == "ArrowLeft") {
         leftPressed = false;
     }
 }
 
+
+function drawBricks() {
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+            let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+            let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+            bricks[c][r].x = brickX;
+            bricks[c][r].y = brickY;
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+}
+
+
+
 // draws ball
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, y, 10, 0, Math.PI*2);
+    ctx.arc(x, y, 10, 0, Math.PI * 2);
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
@@ -53,7 +89,7 @@ function drawBall() {
 // draw paddle
 function drawPaddle() {
     ctx.beginPath();
-    ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
@@ -61,19 +97,20 @@ function drawPaddle() {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBricks()
     drawBall();
     drawPaddle();
-    if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+    if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
         dx = -dx;
     }
 
     // if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
     //     dy = -dy;
     // }
-    if(y + dy < ballRadius) {
+    if (y + dy < ballRadius) {
         dy = -dy;
-    } else if(y + dy > canvas.height-ballRadius) {
-        if(x > paddleX && x < paddleX + paddleWidth) {
+    } else if (y + dy > canvas.height - ballRadius) {
+        if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
         }
         else {
@@ -83,17 +120,17 @@ function draw() {
             clearInterval(interval);
         }
     }
-    
 
-    if(rightPressed) {
+
+    if (rightPressed) {
         paddleX += 7;
-        if (paddleX + paddleWidth > canvas.width){
+        if (paddleX + paddleWidth > canvas.width) {
             paddleX = canvas.width - paddleWidth;
         }
     }
-    else if(leftPressed) {
+    else if (leftPressed) {
         paddleX -= 7;
-        if (paddleX < 0){
+        if (paddleX < 0) {
             paddleX = 0;
         }
     }
