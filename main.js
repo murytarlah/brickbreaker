@@ -19,10 +19,10 @@ let rightPressed = false;
 let leftPressed = false;
 
 //  bricks properties
-let brickRowCount = 3;
+let brickRowCount = 4;
 let brickColumnCount = 5;
 let brickWidth = 140;
-let brickHeight = 35;
+let brickHeight = 30;
 let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
@@ -142,9 +142,6 @@ function draw() {
         dx = -dx;
     }
 
-    // if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
-    //     dy = -dy;
-    // }
     if (y + dy < ballRadius) {
         dy = -dy;
     } else if (y + dy > canvas.height - ballRadius) {
