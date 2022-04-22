@@ -22,7 +22,7 @@ let leftPressed = false;
 let brickRowCount = 4;
 let brickColumnCount = 5;
 let brickWidth = 140;
-let brickHeight = 30;
+let brickHeight = 35;
 let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
@@ -49,6 +49,7 @@ function drawScore() {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
 function keyDownHandler(e) {
     if (e.key == "Right" || e.key == "ArrowRight") {
@@ -68,6 +69,12 @@ function keyUpHandler(e) {
     }
 }
 
+function mouseMoveHandler(e) {
+	let relativeX = e.clientX - canvas.offsetLeft;
+	if(relativeX > 0 && relativeX < canvas.width) {
+	 	paddleX = relativeX - paddleWidth/2;
+	}
+}
 
 function drawBricks() {
     for (let c = 0; c < brickColumnCount; c++) {
@@ -146,9 +153,7 @@ function draw() {
         dy = -dy;
     } else if (y + dy > canvas.height - ballRadius) {
         if (x > paddleX && x < paddleX + paddleWidth) {
-            if (y = y - paddleHeight) {
-                dy = -dy;
-            }
+            dy = -dy;
         }
         else {
             alert("GAME OVER");
@@ -168,4 +173,5 @@ function draw() {
     x += dx;
     y += dy;
 }
-setInterval(draw, 10);
+
+let interval = setInterval(draw, 10);
